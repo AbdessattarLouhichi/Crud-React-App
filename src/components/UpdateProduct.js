@@ -75,11 +75,10 @@ const convertToBase64 = (file) => {
   }
   
   const handleChange = (e)=>{
-    const id = e.target.id
-    const value = e.target.value
+    
     setData({...data,
       id: uuidv1,
-      [id]: value
+      [e.target.id]: e.target.value
     })
   }
 
