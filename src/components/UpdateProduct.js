@@ -4,7 +4,7 @@ import { v1 as uuidv1} from 'uuid';
 import axios from 'axios';
 
 function UpdateProduct() {
-  const [productPhoto, setPhoto] = useState('');
+
   const {id} = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -66,28 +66,40 @@ const convertToBase64 = (file) => {
 
 
   const handleFileUpload = async (e)=>{
+    console.log(e.target)
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
-    setPhoto({...productPhoto,
+    setData({...data,
       id: uuidv1,
       [e.target.id] : base64
     })
   }
   
   const handleChange = (e)=>{
-    
+    const {id, value} = e.target
+    console.log(id)
+    console.log(value)
     setData({...data,
       id: uuidv1,
-      [e.target.id]: e.target.value
+      [id]: value
     })
   }
 
  
   const updateData = async(e)=>{
+
     e.preventDefault();
-    await axios.put('http://localhost:3000/products/' +id,data)
+    await axios.put('http://localhost:3000/products/' +id, 
+    {
+      Product: data.productName,
+      Category: data.category,
+      Price : data.price,
+      Description :data.description,
+      Photo : data.productImg
+    }
+    )
     .then(response =>{
-      console.log(response.data)
+      console.log(response)
       navigate ('/dashboard')
       })
     .catch(error =>{console.log(error.message)})

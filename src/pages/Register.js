@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom'
 import { v1 as uuidv1} from 'uuid';
 import axios from 'axios';
+import {Formik,Form,Field,ErrorMessage} from 'formik';
+import * as Yup from 'yup'
 
 
 function Register() {
@@ -12,7 +14,7 @@ function Register() {
                                     lastName :'',
                                     email :'',
                                     password :''
-                            }])
+                            }]);
    
       
        
@@ -24,57 +26,88 @@ function Register() {
             })
         console.log(data)
         
-    }
+    };
 
-    const handleUser = (e)=>{
-        e.preventDefault()
-        axios.post('http://localhost:3000/users',{
-                                        firstName :data.firstName,
-                                        lastName :data.lastName,
-                                        email : data.inputEmail,
-                                        password : data.inputPassword
-                    })
+    const handleUser = async (values)=>{
+        
+      await  axios.post('http://localhost:3000/users',values)
         .then(response =>{
                             console.log(response.data)
                             navigate ('/login')
                         })
         .catch(error =>{console.log(error.message)})
-    }
+    };
 
-   
+   const initialValues ={
+    firstName: '',
+    lastName:'',
+    inputEmail:'',
+    inputPassword:'',
+    confPassword:''
+   };
+
+   const validationSchema = Yup.object({
+    firstName: Yup.string().required('Required'),
+    lastName: Yup.string().required('Required'),
+    inputEmail: Yup.string()
+      .email('Invalid email format')
+      .required('Required'),  
+    inputPassword: Yup.string()
+        .required('Password is required')
+        .min(8, 'Password is too short - should be 8 chars minimum.')
+        .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    confPassword: Yup.string()
+     .oneOf([Yup.ref('inputPassword'), null], 'Passwords must match')
+  });
          
   return (
-    <div className='col-md-6 offset-md-3 bg-white  rounded my-3 px-5 py-3'>
-        <h1 className='text-center text-uppercase mb-5'>Create an account</h1>
-        <form className="row g-3" onSubmit={handleUser}>
-            <div className="col-md-6">
-            <label htmlFor="firstName" className="form-label">First Name</label>
-            <input type="text" className="form-control" id="firstName" name="firstName" onChange={handleChange}/>
-            </div>
-            <div className="col-md-6 ">
-                <label htmlFor="validationServer02" className="form-label">Last Name</label>
-                <input type="text" className="form-control" id="lastName" name="lastName" onChange={handleChange}/>
-                
-            </div>
-            <div className=" my-2 ">
-                <label htmlFor="inputEmail" className="">Email</label>
-                <input type="text"  className="form-control" id="inputEmail" name="inputEmail" placeholder='example@mail' onChange={handleChange}/>
-            </div>
-            <div className=" my-2">
-                <label htmlFor="inputPassword" className="">Password</label>
-                <input type="password" className="form-control" id="inputPassword" name="inputPassword" placeholder="Password" onChange={handleChange}/>
-            </div>
-            <div className=" my-2">
-                <label htmlFor="confPassword" className="">Confirm Password</label>
-                <input type="password" className="form-control" id="confPassword" name="confPassword" onChange={handleChange}/>
-            </div>
-            <div className="text-center d-grid gap-2">
-                <button type="submit" className="btn btn-dark  mb-3 rounded-pill">Sign Up</button>
-            </div>
-            <p className="text-center text-muted mt-5 mb-0">Have already an account? <Link to="/login"
-                    className="fw-bold text-body"><u>Login here</u></Link></p>
-        </form>
-    </div>
+   
+        <div className='col-md-6 offset-md-3 bg-white  rounded my-3 px-5 py-3'>
+            <h1 className='text-center text-uppercase mb-5'>Create an account</h1>
+            <Formik
+                initialValues={initialValues}
+                validationSchema ={validationSchema}
+                onSubmit = {values =>handleUser(values)}>
+                {formik => {
+                 console.log('Formik props', formik)
+                return(
+                <Form className="row g-3">
+                    <div className="col-md-6">
+                    <label htmlFor="firstName" className="form-label">First Name</label>
+                    <Field type="text" className="form-control" id="firstName" name="firstName" onChange={handleChange}/>
+                    <ErrorMessage name='firstName' />
+                    </div>
+                    <div className="col-md-6 ">
+                        <label htmlFor="validationServer02" className="form-label">Last Name</label>
+                        <Field type="text" className="form-control" id="lastName" name="lastName" onChange={handleChange}/>
+                        <ErrorMessage name='lastName' className="text-danger" />
+                    </div>
+                    <div className=" my-2 ">
+                        <label htmlFor="inputEmail" className="">Email</label>
+                        <Field type="text"  className="form-control" id="inputEmail" name="inputEmail" placeholder='example@mail' onChange={handleChange}/>
+                        <ErrorMessage name='inputEmail' className="text-danger" />
+                    </div>
+                    <div className=" my-2">
+                        <label htmlFor="inputPassword" className="">Password</label>
+                        <Field type="password" className="form-control" id="inputPassword" name="inputPassword" placeholder="Password" onChange={handleChange}/>
+                        <ErrorMessage name='inputPassword' className="text-danger" />
+                    </div>
+                    <div className=" my-2">
+                        <label htmlFor="confPassword" className="">Confirm Password</label>
+                        <Field type="password" className="form-control" id="confPassword" name="confPassword" onChange={handleChange}/>
+                        <ErrorMessage name='confPassword' className="text-danger" />
+                    </div>
+                    <div className="text-center d-grid gap-2">
+                        <button type="submit" className="btn btn-dark  mb-3 rounded-pill"  disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button>
+                    </div>
+                    <p className="text-center text-muted mt-5 mb-0">Have already an account? <Link to="/login"
+                            className="fw-bold text-body"><u>Login here</u></Link></p>
+                </Form>
+                )}}
+            </Formik>
+        </div>
+ 
+    
   )
 }
 

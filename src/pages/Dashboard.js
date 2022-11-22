@@ -58,7 +58,7 @@ function Dashboard() {
     if (window.confirm('Do you want to remove?')) {
        await axios.delete(`http://localhost:3000/products/${id}`)  
       .then((res) => {
-            alert('Removed successfully.')
+           
             window.location.reload();
         }).catch((err) => {
             console.log(err.message)
