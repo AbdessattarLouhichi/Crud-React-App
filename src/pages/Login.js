@@ -1,7 +1,7 @@
 import React,{useState}  from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, ErrorMessage,Field } from 'formik';
 import * as Yup from 'yup';
 
 function Login() {
@@ -21,28 +21,25 @@ function Login() {
     .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
   })
   const navigate = useNavigate();
-  const [Email, setEmail] = useState('');
-  const [Password, setPassword] = useState('');
+  //const [Email, setEmail] = useState('');
+  //const [Password, setPassword] = useState('');
   const [warning, setWarning] = useState(false);
 
 
   const onSubmit =  async (values)=>{
- 
+    await  axios.get('http://localhost:3000/users')
+        .then(response =>{
+              const Found = response.data.find(user => user.inputEmail === values.Email && user.inputPassword === values.Password)
+              if (Found) {
+                warning && setWarning(false)
+                //SUCCESS LOGIN MESSAGE!  You are successfully logged in
+                navigate('/dashboard')
 
-  await  axios.get('http://localhost:3000/users')
-      .then(response =>{
-            const Found = response.data.find(user => user.email === values.Email && user.password === values.Password)
-            if (Found) {
-              warning && setWarning(false)
-              //SUCCESS LOGIN MESSAGE!  You are successfully logged in
-              navigate('/dashboard')
-
-          } else {
-              setWarning(true)
-          }
-      })
-      .catch(err=>{console.log(err.message)})
-    
+            } else {
+                setWarning(true)
+            }
+        })
+        .catch(err=>{console.log(err.message)})   
   }
 
   const warningMsg = warning && <div className='alert alert-danger mt-5'>Please check your email and password and try again !</div>
@@ -57,18 +54,17 @@ function Login() {
        validationSchema={validationSchema}
        onSubmit={onSubmit}>
       {formik => {
-        console.log(formik)
         return(
         <Form className="row g-3">
             <div className=" my-2 ">
                 <label htmlFor="Email" className="">Email</label>
-                <input type="text"  className="form-control" id="Email" name='Email' value={Email} onChange={(e)=>setEmail(e.target.value)} placeholder='example@mail'/>
-                <ErrorMessage name='Email' className="text-danger" />
+                <Field type="text"  className="form-control" id="Email" name='Email'  placeholder='example@mail'/>
+                <ErrorMessage name='Email' component={'div'} className="text-danger"/>
             </div>
             <div className=" my-2">
                 <label htmlFor="Password" className="">Password</label>
-                <input type="password" className="form-control" id="Password" name='Password' value={Password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password"/>
-                <ErrorMessage name='Password' className="text-danger" />
+                <Field type="password" className="form-control" id="Password" name='Password'   placeholder="Password"/>
+                <ErrorMessage name='Password' component={'div'} className="text-danger"/>
             </div>
             <div className="text-center d-grid gap-2">
                 <button type="submit" className="btn btn-dark  mb-3 rounded-pill" disabled={!formik.isValid}>Sign In</button>

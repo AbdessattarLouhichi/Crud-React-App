@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Link, useNavigate} from 'react-router-dom'
-import { v1 as uuidv1} from 'uuid';
+//import { v1 as uuidv1} from 'uuid';
 import axios from 'axios';
 import {Formik,Form,Field,ErrorMessage} from 'formik';
 import * as Yup from 'yup'
@@ -8,17 +8,16 @@ import * as Yup from 'yup'
 
 function Register() {
 
-    const navigate = useNavigate();
-    const [data, setData] = useState([{
+     /* const [data, setData] = useState([{
                                     firstName :'',
                                     lastName :'',
                                     email :'',
                                     password :''
                             }]);
-   
+                        }
       
        
-    const handleChange = (e) =>{
+  {  const handleChange = (e) =>{
         setData({...data,
                 id: uuidv1,
                 [e.target.id] :e.target.value
@@ -26,11 +25,14 @@ function Register() {
             })
         console.log(data)
         
-    };
+    };*/
 
-    const handleUser = async (values)=>{
+    const navigate = useNavigate();
+  
+
+    const handleUser =  (values)=>{
         
-      await  axios.post('http://localhost:3000/users',values)
+        axios.post('http://localhost:3000/users',values)
         .then(response =>{
                             console.log(response.data)
                             navigate ('/login')
@@ -67,35 +69,35 @@ function Register() {
             <Formik
                 initialValues={initialValues}
                 validationSchema ={validationSchema}
-                onSubmit = {values =>handleUser(values)}>
+                onSubmit = {handleUser}>
+
                 {formik => {
-                 console.log('Formik props', formik)
                 return(
                 <Form className="row g-3">
                     <div className="col-md-6">
                     <label htmlFor="firstName" className="form-label">First Name</label>
-                    <Field type="text" className="form-control" id="firstName" name="firstName" onChange={handleChange}/>
-                    <ErrorMessage name='firstName' />
+                    <Field type="text" className="form-control" id="firstName" name="firstName"/>
+                    <ErrorMessage name='firstName' component={'div'} className="text-danger"/>
                     </div>
                     <div className="col-md-6 ">
                         <label htmlFor="validationServer02" className="form-label">Last Name</label>
-                        <Field type="text" className="form-control" id="lastName" name="lastName" onChange={handleChange}/>
-                        <ErrorMessage name='lastName' className="text-danger" />
+                        <Field type="text" className="form-control" id="lastName" name="lastName"/>
+                        <ErrorMessage name='lastName' component={'div'} className="text-danger"/>
                     </div>
                     <div className=" my-2 ">
                         <label htmlFor="inputEmail" className="">Email</label>
-                        <Field type="text"  className="form-control" id="inputEmail" name="inputEmail" placeholder='example@mail' onChange={handleChange}/>
-                        <ErrorMessage name='inputEmail' className="text-danger" />
+                        <Field type="text"  className="form-control" id="inputEmail" name="inputEmail" placeholder='example@mail'/>
+                        <ErrorMessage name='inputEmail' component={'div'} className="text-danger" />
                     </div>
                     <div className=" my-2">
                         <label htmlFor="inputPassword" className="">Password</label>
-                        <Field type="password" className="form-control" id="inputPassword" name="inputPassword" placeholder="Password" onChange={handleChange}/>
-                        <ErrorMessage name='inputPassword' className="text-danger" />
+                        <Field type="password" className="form-control" id="inputPassword" name="inputPassword" placeholder="Password"/>
+                        <ErrorMessage name='inputPassword' component={'div'} className="text-danger" />
                     </div>
                     <div className=" my-2">
                         <label htmlFor="confPassword" className="">Confirm Password</label>
-                        <Field type="password" className="form-control" id="confPassword" name="confPassword" onChange={handleChange}/>
-                        <ErrorMessage name='confPassword' className="text-danger" />
+                        <Field type="password" className="form-control" id="confPassword" name="confPassword"/>
+                        <ErrorMessage name='confPassword' component={'div'} className="text-danger" />
                     </div>
                     <div className="text-center d-grid gap-2">
                         <button type="submit" className="btn btn-dark  mb-3 rounded-pill"  disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button>
