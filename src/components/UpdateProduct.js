@@ -23,11 +23,12 @@ useEffect(() => {
     const getData = async () => {
       
        await axios.get('http://localhost:3000/products/' + id)
-      .then(res=> {setData(res.data)}
+      .then(res=> {setData(res.data); console.log(res.data)}
       )
       .catch(error => {console.log(error);})
     };
   getData();
+ 
   }, [id]);
     
 useEffect(() => {
@@ -91,7 +92,7 @@ const handleChange = (e)=>{
     
     await axios.put('http://localhost:3000/products/' +id, 
     {
-      Product: data.ProductName,
+      Product: data.Product,
       Category: data.Category,
       Price : data.Price,
       Description :data.Description,
@@ -122,7 +123,7 @@ const handleChange = (e)=>{
                 <label htmlFor="productName" className="font-weight-bold">Product</label>
                 <Link to="/dashboard" className=" font-weight-bold text-dark "><i className="fa-solid fa-list-check me-3"></i>List of products</Link>
                 </div>
-                <input type="text" className="form-control" id="ProductName"  value={data.Product} onChange={handleChange}/>
+                <input type="text" className="form-control" id="Product"  value={data.Product} onChange={handleChange}/>
               </div>
               {/* Product Price input type number */}
               <div className="form-group my-3">
