@@ -75,7 +75,7 @@ const convertToBase64 = (file) => {
   }
   
 const handleChange = (e)=>{
-    console.log(e.target.value)
+    console.log(e)
     
     setData({...data,
       id: uuidv1,
@@ -88,13 +88,14 @@ const handleChange = (e)=>{
   const updateData = async(e)=>{
       console.log(data)
     e.preventDefault();
+    
     await axios.put('http://localhost:3000/products/' +id, 
     {
-      Product: data.productName,
-      Category: data.category,
-      Price : data.price,
-      Description :data.description,
-      Photo : data.productImg
+      Product: data.ProductName,
+      Category: data.Category,
+      Price : data.Price,
+      Description :data.Description,
+      Photo : data.Photo
     }
     )
     .then(response =>{
@@ -121,21 +122,21 @@ const handleChange = (e)=>{
                 <label htmlFor="productName" className="font-weight-bold">Product</label>
                 <Link to="/dashboard" className=" font-weight-bold text-dark "><i className="fa-solid fa-list-check me-3"></i>List of products</Link>
                 </div>
-                <input type="text" className="form-control" id="productName"   onChange={handleChange} placeholder="Product Name"/>
+                <input type="text" className="form-control" id="ProductName"  value={data.Product} onChange={handleChange}/>
               </div>
               {/* Product Price input type number */}
               <div className="form-group my-3">
                 <label htmlFor="price" className="font-weight-bold">Price</label>
-                <input type="number"  className="form-control" id="price" value={data.Price} onChange={handleChange}/>
+                <input type="number"  className="form-control" id="Price" value={data.Price} onChange={handleChange}/>
               </div>
               {/* Product Description input textarea */}
               <div className="form-group my-3">
                 <label htmlFor="description" className="font-weight-bold">Description</label>
-                <textarea className="form-control" id="description" value={data.Description} onChange={handleChange} rows="3"></textarea>
+                <textarea className="form-control" id="Description" value={data.Description} onChange={handleChange} rows="3"></textarea>
               </div>
               <div className='my-4'>
                 <label htmlFor="category" className="font-weight-bold">Category</label>
-                <select name="Categories" id="category" value={data.Category}  onChange={handleChange}>
+                <select name="Categories" id="Category" value={data.Category}  onChange={handleChange}>
                   {
                     loading ? 'loading' : post.map((item)=>
                     <option key={item.categoryName} >{item.categoryName}</option>
@@ -149,7 +150,7 @@ const handleChange = (e)=>{
               <div className='d-flex justify-content-center'><img src={data.Photo} alt='productImg' width={75}/></div>
               <div className="form-group my-4">
                 <label htmlFor="productImg" className="font-weight-bold">Add Photo</label>
-                <input type="file" className="form-control-file" id="productImg"  onChange={handleFileUpload}/>
+                <input type="file" className="form-control-file" id="Photo"  onChange={handleFileUpload}/>
               </div>
               {/*Click button  to add product*/}
               <div className=' '>
