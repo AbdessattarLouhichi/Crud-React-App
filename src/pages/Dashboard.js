@@ -27,7 +27,7 @@ const reducer = (state, action)=>{
       return state   
   }
 }
-export const setData = (data) => {
+ const setData = (data) => {
     console.log(data)
   let {Product,Category, Price, Description, Photo ,id } = data;
         localStorage.setItem('ID', id);
@@ -105,7 +105,7 @@ function Dashboard() {
                                 <td><img src={item.Photo} width ="50px" alt='ProductImage'/></td>
                                 <td className="align-middle">
                                   
-                                  <Link  to={"/updateProduct/" +item.id} onClick={() => setData(item.id)} data-toggle='modal' className='btn btn-success mx-2' data-target='#edit'  data-mdb-toggle="tooltip" title="Done">
+                                  <Link  to={"/updateProduct/" +item.id} onClick={() => setData(item)} data-toggle='modal' className='btn btn-success mx-2' data-target='#edit'  data-mdb-toggle="tooltip" title="Done">
                                         <i className="fas fa-pencil-alt text-white"></i>
                                   </Link>                           
                                   <button title="Remove" className='btn btn-danger' onClick={()=> removeProduct(item.id)}>

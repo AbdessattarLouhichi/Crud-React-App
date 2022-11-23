@@ -28,10 +28,9 @@ function CreateProduct() {
       setLoading(false)
       setPost({})
       setError({error: error.message})
-    }
-                          
-    )
+    })
   }, [])
+  
 const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -46,9 +45,6 @@ const convertToBase64 = (file) => {
   };
 
   const handleChange =(e )=>{
-    const {id, value} = e.target
-    console.log(id)
-    console.log(value)
     setProduct({...product,
       id: uuidv1,
       [e.target.id] : e.target.value,
@@ -57,9 +53,6 @@ const convertToBase64 = (file) => {
   }
 
   const handleFileUpload = async (e)=>{
-    const {id, value} = e.target
-    console.log(id)
-    console.log(value)
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
     setProduct({...product,
@@ -68,9 +61,6 @@ const convertToBase64 = (file) => {
     })
   }
   
-
-  
-
   const addProduct = (e)=>{
     e.preventDefault();
     axios.post('http://localhost:3000/products',{

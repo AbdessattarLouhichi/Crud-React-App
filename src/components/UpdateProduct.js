@@ -10,16 +10,15 @@ function UpdateProduct() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [post, setPost] = useState({});
-
   const [data, setData] = useState([{
-          Product:'',
-          Category: '',
-          Price:'',
-          Description :'',
-          Photo :''
-  }]);
+    Product:'',
+    Category: '',
+    Price:'',
+    Description :'',
+    Photo :''
+}]);
 
-  useEffect(() => {
+useEffect(() => {
    
     const getData = async () => {
       
@@ -31,7 +30,7 @@ function UpdateProduct() {
   getData();
   }, [id]);
     
-  useEffect(() => {
+useEffect(() => {
     
     axios.get('http://localhost:3000/categories')
     .then(res=>{
@@ -75,19 +74,19 @@ const convertToBase64 = (file) => {
     })
   }
   
-  const handleChange = (e)=>{
-    const {id, value} = e.target
-    console.log(id)
-    console.log(value)
+const handleChange = (e)=>{
+    console.log(e.target.value)
+    
     setData({...data,
       id: uuidv1,
-      [id]: value
+      [e.target.id]: e.target.value
     })
+    console.log(data)
   }
 
  
   const updateData = async(e)=>{
-
+      console.log(data)
     e.preventDefault();
     await axios.put('http://localhost:3000/products/' +id, 
     {
@@ -122,7 +121,7 @@ const convertToBase64 = (file) => {
                 <label htmlFor="productName" className="font-weight-bold">Product</label>
                 <Link to="/dashboard" className=" font-weight-bold text-dark "><i className="fa-solid fa-list-check me-3"></i>List of products</Link>
                 </div>
-                <input type="text" className="form-control" id="productName" value={data.Product}  onChange={handleChange} placeholder="Product Name"/>
+                <input type="text" className="form-control" id="productName"   onChange={handleChange} placeholder="Product Name"/>
               </div>
               {/* Product Price input type number */}
               <div className="form-group my-3">
